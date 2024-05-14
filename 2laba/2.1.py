@@ -122,6 +122,7 @@ def shannon_fano(nodes, start, end):
     shannon_fano(nodes, start, split_index)
     shannon_fano(nodes, split_index+1, end)
 
+
 def main():
     text = """Кохайтеся, чорнобриві,
 Та не з москалями,

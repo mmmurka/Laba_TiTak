@@ -1,3 +1,4 @@
+import math
 from collections import Counter
 
 
@@ -38,16 +39,13 @@ def shannon_fano_coding(text):
 
 
 def calculate_statistics(text, code_dict):
-    total_bits = 0
-    # Обчислення загальної кількості біт у закодованому тексті
-    for char in text:
-        total_bits += len(code_dict[char])
-    average_length = total_bits / len(text)
-    # Обчислення ентропії тексту
-    entropy = sum([-freq / len(text) * (freq / len(text)) for freq in Counter(text).values()])
-    # Обчислення коефіцієнта ефективності та коефіцієнта стиснення
-    efficiency = entropy / average_length
-    compression_ratio = 8 / average_length
+    total_bits = sum(len(code_dict[char]) for char in text)  # Загальна кількість бітів
+    unique_chars = len(set(text))  # Кількість унікальних символів у тексті
+    char_freq = Counter(text)  # Частота появи кожного символу
+    entropy = sum((-freq / len(text)) * math.log2(freq / len(text)) for freq in char_freq.values())  # Ентропія
+    average_length = total_bits / unique_chars if unique_chars != 0 else 0  # Середня довжина
+    efficiency = entropy / average_length if average_length != 0 else 0  # Коефіцієнт ефективності
+    compression_ratio = 8 / average_length if average_length != 0 else 0  # Коефіцієнт стиснення
     return total_bits, average_length, efficiency, compression_ratio
 
 
