@@ -1,32 +1,35 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Вхідні параметри
-amplitude = 1.0  # Амплітуда
-carrier_frequency = 0.82  # Частота несучої хвилі
-modulation_frequency = 46.77  # Частота модуляції
-sampling_rate = 1000  # Частота дискретизації
-duration = 1.0  # Тривалість сигналу
+# Параметры времени
+T = 20  # Общее время сигнала
+f = 0.82  # Частота модуляции
+fs = 46.77  # Частота дискретизации (количество отсчетов в секунду)
+t = np.linspace(0, T, int(T * fs))  # Вектор времени
 
-# Часовий вектор
-t = np.linspace(0, duration, int(sampling_rate * duration))
+# Определение функции s(t)
+# Для примера предполагаем, что каждый уровень длится приблизительно равное время
+s = np.zeros_like(t)
+s[:int(len(t)/3)] = 1  # Первый уровень
+s[int(len(t)/3):int(2*len(t)/3)] = 0.5  # Второй уровень
+s[int(2*len(t)/3):] = 1  # Третий уровень
 
-# Сигнал несучої хвилі
-carrier_signal = amplitude * np.sin(2 * np.pi * carrier_frequency * t)
+# Модулирующий сигнал
+w = s * np.sin(2 * np.pi * f * t)
 
-# Сигнал модуляції
-modulation_signal = np.cos(2 * np.pi * modulation_frequency * t)
-
-# Модульований сигнал
-modulated_signal = carrier_signal * modulation_signal
-
-# Побудова графіка
+# Визуализация
 plt.figure(figsize=(10, 6))
-plt.plot(t, modulated_signal, label='Модульований сигнал')
-plt.plot(t, carrier_signal, label='Несучий сигнал')
-plt.xlabel('Час')
-plt.ylabel('Амплітуда')
-plt.title('Модульований і несучий сигнали')
+plt.subplot(2, 1, 1)
+plt.title("Original Signal s(t)")
+plt.plot(t, s, label='s(t)')
+plt.ylabel("Amplitude")
 plt.legend()
-plt.grid(True)
+
+plt.subplot(2, 1, 2)
+plt.title("Modulated Signal w(t)")
+plt.plot(t, w, label='w(t) = s(t) * sin(2πft)', color='red')
+plt.xlabel("Time (seconds)")
+plt.ylabel("Amplitude")
+plt.legend()
+plt.tight_layout()
 plt.show()
